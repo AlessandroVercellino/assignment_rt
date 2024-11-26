@@ -285,6 +285,19 @@ gtest/fast:
 .PHONY : gtest/fast
 
 #=============================================================================
+# Target rules for targets named distance_node
+
+# Build rule for target.
+distance_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 distance_node
+.PHONY : distance_node
+
+# fast build rule for target.
+distance_node/fast:
+	$(MAKE) -f assignment1_rt/CMakeFiles/distance_node.dir/build.make assignment1_rt/CMakeFiles/distance_node.dir/build
+.PHONY : distance_node/fast
+
+#=============================================================================
 # Target rules for targets named ui_node
 
 # Build rule for target.
@@ -709,6 +722,7 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... distance_node"
 	@echo "... ui_node"
 	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... roscpp_generate_messages_lisp"

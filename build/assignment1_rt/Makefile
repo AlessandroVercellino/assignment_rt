@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+assignment1_rt/CMakeFiles/distance_node.dir/rule:
+	cd /root/my_ws/build && $(MAKE) -f CMakeFiles/Makefile2 assignment1_rt/CMakeFiles/distance_node.dir/rule
+.PHONY : assignment1_rt/CMakeFiles/distance_node.dir/rule
+
+# Convenience name for target.
+distance_node: assignment1_rt/CMakeFiles/distance_node.dir/rule
+
+.PHONY : distance_node
+
+# fast build rule for target.
+distance_node/fast:
+	cd /root/my_ws/build && $(MAKE) -f assignment1_rt/CMakeFiles/distance_node.dir/build.make assignment1_rt/CMakeFiles/distance_node.dir/build
+.PHONY : distance_node/fast
+
+# Convenience name for target.
 assignment1_rt/CMakeFiles/ui_node.dir/rule:
 	cd /root/my_ws/build && $(MAKE) -f CMakeFiles/Makefile2 assignment1_rt/CMakeFiles/ui_node.dir/rule
 .PHONY : assignment1_rt/CMakeFiles/ui_node.dir/rule
@@ -632,6 +647,33 @@ std_srvs_generate_messages_lisp/fast:
 	cd /root/my_ws/build && $(MAKE) -f assignment1_rt/CMakeFiles/std_srvs_generate_messages_lisp.dir/build.make assignment1_rt/CMakeFiles/std_srvs_generate_messages_lisp.dir/build
 .PHONY : std_srvs_generate_messages_lisp/fast
 
+src/distance_node.o: src/distance_node.cpp.o
+
+.PHONY : src/distance_node.o
+
+# target to build an object file
+src/distance_node.cpp.o:
+	cd /root/my_ws/build && $(MAKE) -f assignment1_rt/CMakeFiles/distance_node.dir/build.make assignment1_rt/CMakeFiles/distance_node.dir/src/distance_node.cpp.o
+.PHONY : src/distance_node.cpp.o
+
+src/distance_node.i: src/distance_node.cpp.i
+
+.PHONY : src/distance_node.i
+
+# target to preprocess a source file
+src/distance_node.cpp.i:
+	cd /root/my_ws/build && $(MAKE) -f assignment1_rt/CMakeFiles/distance_node.dir/build.make assignment1_rt/CMakeFiles/distance_node.dir/src/distance_node.cpp.i
+.PHONY : src/distance_node.cpp.i
+
+src/distance_node.s: src/distance_node.cpp.s
+
+.PHONY : src/distance_node.s
+
+# target to generate assembly for a file
+src/distance_node.cpp.s:
+	cd /root/my_ws/build && $(MAKE) -f assignment1_rt/CMakeFiles/distance_node.dir/build.make assignment1_rt/CMakeFiles/distance_node.dir/src/distance_node.cpp.s
+.PHONY : src/distance_node.cpp.s
+
 src/ui_node.o: src/ui_node.cpp.o
 
 .PHONY : src/ui_node.o
@@ -668,6 +710,7 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
+	@echo "... distance_node"
 	@echo "... ui_node"
 	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... roscpp_generate_messages_lisp"
@@ -703,6 +746,9 @@ help:
 	@echo "... std_srvs_generate_messages_nodejs"
 	@echo "... std_srvs_generate_messages_eus"
 	@echo "... std_srvs_generate_messages_lisp"
+	@echo "... src/distance_node.o"
+	@echo "... src/distance_node.i"
+	@echo "... src/distance_node.s"
 	@echo "... src/ui_node.o"
 	@echo "... src/ui_node.i"
 	@echo "... src/ui_node.s"

@@ -5,4 +5,4 @@ Description: Description of assignment1_rt
 Version: 0.0.0
 Cflags: 
 Libs: -L${prefix}/lib 
-Requires: roscpp std_msgs turtlesim
+Requires: roscpp std_msgs turtlesim geometry_msgs

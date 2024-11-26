@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   turtlesim
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES assignment1_rt
- CATKIN_DEPENDS roscpp std_msgs turtlesim
+ CATKIN_DEPENDS roscpp std_msgs turtlesim geometry_msgs
 #  DEPENDS system_lib
 )
 
@@ -134,6 +135,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(ui_node src/ui_node.cpp)
+add_executable(distance_node src/distance_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -146,8 +148,8 @@ add_executable(ui_node src/ui_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(ui_node ${catkin_LIBRARIES})
-
+target_link_libraries(ui_node ${catkin_LIBRARIES})
+target_link_libraries(distance_node ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
