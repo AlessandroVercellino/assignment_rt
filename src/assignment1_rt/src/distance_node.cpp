@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
-#include "turtlesim/Pose.h"
 #include "geometry_msgs/Twist.h"
+#include "turtlesim/Pose.h"
 #include <cmath>
 
 turtlesim::Pose turtle1_pose;
@@ -35,7 +35,11 @@ int main(int argc, char **argv) {
         distance_msg.data = distance;
         distance_pub.publish(distance_msg);
 
+        // Log della distanza
+        ROS_INFO("Distance between turtles: %.2f", distance);
+
         if (distance < 1.0) {
+            ROS_WARN("Turtles are too close! Stopping turtle2.");
             geometry_msgs::Twist stop_cmd;
             stop_cmd.linear.x = 0.0;
             stop_cmd.angular.z = 0.0;
@@ -44,6 +48,7 @@ int main(int argc, char **argv) {
 
         if (turtle2_pose.x > 10.0 || turtle2_pose.x < 1.0 || 
             turtle2_pose.y > 10.0 || turtle2_pose.y < 1.0) {
+            ROS_WARN("Turtle2 is near the boundary! Stopping turtle2.");
             geometry_msgs::Twist stop_cmd;
             stop_cmd.linear.x = 0.0;
             stop_cmd.angular.z = 0.0;
@@ -56,4 +61,5 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
 
