@@ -690,22 +690,6 @@ ros/forwards.h
 
 /opt/ros/noetic/include/rosconsole/macros_generated.h
 
-/opt/ros/noetic/include/std_msgs/Float32.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
 /opt/ros/noetic/include/turtlesim/Pose.h
 string
 -
@@ -741,8 +725,6 @@ time.h
 /root/my_ws/src/assignment1_rt/src/distance_node.cpp
 ros/ros.h
 /root/my_ws/src/assignment1_rt/src/ros/ros.h
-std_msgs/Float32.h
-/root/my_ws/src/assignment1_rt/src/std_msgs/Float32.h
 geometry_msgs/Twist.h
 /root/my_ws/src/assignment1_rt/src/geometry_msgs/Twist.h
 turtlesim/Pose.h

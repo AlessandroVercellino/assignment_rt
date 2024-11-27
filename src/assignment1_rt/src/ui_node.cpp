@@ -1,121 +1,93 @@
-#include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
-#include "turtlesim/Spawn.h"
-#include "turtlesim/Pose.h"
-#include <iostream>
-#include <string>
-#include <cstdlib> // Per rand() e srand()
-#include <ctime>   // Per time()
-
-// Posizione della prima tartaruga
-turtlesim::Pose turtle1_pose;
-
-// Callback per aggiornare la posizione di turtle1
-void turtle1PoseCallback(const turtlesim::Pose::ConstPtr &msg) {
-    turtle1_pose = *msg;
-    ROS_INFO("Turtle1 Pose updated: x=%.2f, y=%.2f", turtle1_pose.x, turtle1_pose.y);
-}
-
-// Funzione per generare una posizione casuale
-bool generateSafePosition(float &x, float &y, const turtlesim::Pose &turtle1_pose, float min_distance) {
-    const float min_x = 2.0;
-    const float max_x = 8.0;
-    const float min_y = 2.0;
-    const float max_y = 8.0;
-
-    for (int attempt = 0; attempt < 100; ++attempt) {
-        x = min_x + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max_x - min_x)));
-        y = min_y + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max_y - min_y)));
-
-        float distance = sqrt(pow(x - turtle1_pose.x, 2) + pow(y - turtle1_pose.y, 2));
-        if (distance >= min_distance) {
-            return true;
-        }
-    }
-
-    ROS_WARN("Failed to generate a safe position for turtle2 after 100 attempts.");
-    return false;
-}
+#include "ros/ros.h"               // Include la libreria principale di ROS
+#include "geometry_msgs/Twist.h"   // Include il messaggio per inviare velocità lineare e angolare
+#include "turtlesim/Spawn.h"       // Include il servizio per creare una nuova tartaruga
+#include <iostream>                // Include per input/output standard
+#include <string>                  // Include per gestire stringhe
 
 int main(int argc, char **argv) {
+    // Inizializza il nodo ROS con il nome "ui_node"
     ros::init(argc, argv, "ui_node");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh; // Nodo ROS per gestire le comunicazioni
 
-    // Sottoscrizione alla posizione della prima tartaruga
-    ros::Subscriber turtle1_pose_sub = nh.subscribe("turtle1/pose", 10, turtle1PoseCallback);
-
-    // Aspetta che la posizione di turtle1 sia aggiornata
-    ROS_INFO("Waiting for turtle1 pose...");
-    ros::Rate rate(10);
-    while (ros::ok() && turtle1_pose.x == 0.0 && turtle1_pose.y == 0.0) {
-        ros::spinOnce();
-        rate.sleep();
-    }
-    ROS_INFO("Turtle1 Pose received: x=%.2f, y=%.2f", turtle1_pose.x, turtle1_pose.y);
-
-    // Spawn della seconda tartaruga (turtle2)
+    // Aspetta che il servizio "/spawn" sia disponibile
     ros::service::waitForService("spawn");
+
+    // Crea un client per il servizio "/spawn" per creare una nuova tartaruga
     ros::ServiceClient spawn_client = nh.serviceClient<turtlesim::Spawn>("spawn");
     turtlesim::Spawn spawn_srv;
 
-    // Genera una posizione sicura per turtle2
-    float turtle2_x, turtle2_y;
-    float min_distance = 3.0; // Distanza minima tra turtle1 e turtle2
-    srand(time(0));           // Inizializza il generatore di numeri casuali
+    // Configura la posizione e il nome della nuova tartaruga (turtle2)
+    spawn_srv.request.x = 3.0;
+    spawn_srv.request.y = 5.0;
+    spawn_srv.request.name = "turtle2";
 
-    if (generateSafePosition(turtle2_x, turtle2_y, turtle1_pose, min_distance)) {
-        spawn_srv.request.x = turtle2_x;
-        spawn_srv.request.y = turtle2_y;
-        spawn_srv.request.name = "turtle2";
-
-        if (spawn_client.call(spawn_srv)) {
-            ROS_INFO("Spawned turtle2 at x=%.2f, y=%.2f", turtle2_x, turtle2_y);
-        } else {
-            ROS_ERROR("Failed to spawn turtle2.");
-            return 1;
-        }
+    // Chiama il servizio per creare "turtle2"
+    if (spawn_client.call(spawn_srv)) {
+        ROS_INFO("Spawned turtle2 successfully."); // Log di successo
     } else {
-        ROS_ERROR("Could not find a safe position to spawn turtle2.");
-        return 1;
+        ROS_ERROR("Failed to spawn turtle2."); // Log di errore
+        return 1; // Termina il programma se il servizio fallisce
     }
 
-    // Publisher per i nuovi topic sicuri
-    ros::Publisher turtle1_pub = nh.advertise<geometry_msgs::Twist>("turtle1/cmd_vel_safe", 10);
-    ros::Publisher turtle2_pub = nh.advertise<geometry_msgs::Twist>("turtle2/cmd_vel_safe", 10);
+    // Crea due publisher per inviare comandi di velocità a turtle1 e turtle2
+    ros::Publisher turtle1_pub = nh.advertise<geometry_msgs::Twist>("turtle1/cmd_vel", 10);
+    ros::Publisher turtle2_pub = nh.advertise<geometry_msgs::Twist>("turtle2/cmd_vel", 10);
 
-    // Ciclo per controllare le tartarughe
+    // Ciclo principale per interagire con l'utente
     while (ros::ok()) {
-        std::string turtle;
-        float linear, angular;
+        std::string turtle;      // Nome della tartaruga selezionata dall'utente
+        float linear, angular;   // Velocità lineare e angolare inserite dall'utente
 
+        // Chiede all'utente di selezionare quale tartaruga controllare
         std::cout << "Select turtle (turtle1 or turtle2): ";
         std::cin >> turtle;
+
+        // Chiede all'utente di specificare la velocità lineare
         std::cout << "Enter linear velocity: ";
         std::cin >> linear;
+
+        // Chiede all'utente di specificare la velocità angolare
         std::cout << "Enter angular velocity: ";
         std::cin >> angular;
 
+        // Crea un messaggio di velocità da inviare alla tartaruga
         geometry_msgs::Twist cmd_vel;
-        cmd_vel.linear.x = linear;
-        cmd_vel.angular.z = angular;
+        cmd_vel.linear.x = linear;    // Imposta la velocità lineare
+        cmd_vel.angular.z = angular; // Imposta la velocità angolare
 
+        // Pubblica il comando sulla tartaruga selezionata
         if (turtle == "turtle1") {
             turtle1_pub.publish(cmd_vel);
-            ROS_INFO("Published to turtle1 (safe): linear=%.2f, angular=%.2f", linear, angular);
+            ROS_INFO("Published to turtle1: linear=%.2f, angular=%.2f", linear, angular);
         } else if (turtle == "turtle2") {
             turtle2_pub.publish(cmd_vel);
-            ROS_INFO("Published to turtle2 (safe): linear=%.2f, angular=%.2f", linear, angular);
+            ROS_INFO("Published to turtle2: linear=%.2f, angular=%.2f", linear, angular);
         } else {
+            // Se l'input dell'utente è errato, mostra un messaggio di errore
             std::cout << "Invalid turtle name. Try again.\n";
-            continue;
+            continue; // Ripete il ciclo senza inviare comandi
         }
 
-        // Pausa per evitare pubblicazioni continue
+        // Mantiene il comando per 1 secondo
         ros::Duration(1.0).sleep();
+
+        // Imposta le velocità a zero per fermare la tartaruga
+        cmd_vel.linear.x = 0.0;
+        cmd_vel.angular.z = 0.0;
+
+        // Ferma la tartaruga selezionata
+        if (turtle == "turtle1") {
+            turtle1_pub.publish(cmd_vel);
+            ROS_INFO("Stopped turtle1.");
+        } else if (turtle == "turtle2") {
+            turtle2_pub.publish(cmd_vel);
+            ROS_INFO("Stopped turtle2.");
+        }
     }
 
-    return 0;
+    return 0; // Fine del programma
 }
+
 
 
 
