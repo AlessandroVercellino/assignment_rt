@@ -690,6 +690,22 @@ ros/forwards.h
 
 /opt/ros/noetic/include/rosconsole/macros_generated.h
 
+/opt/ros/noetic/include/turtlesim/Pose.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
 /opt/ros/noetic/include/turtlesim/Spawn.h
 ros/service_traits.h
 -
@@ -753,8 +769,12 @@ geometry_msgs/Twist.h
 /root/my_ws/src/assignment1_rt/src/geometry_msgs/Twist.h
 turtlesim/Spawn.h
 /root/my_ws/src/assignment1_rt/src/turtlesim/Spawn.h
+turtlesim/Pose.h
+/root/my_ws/src/assignment1_rt/src/turtlesim/Pose.h
 iostream
 -
 string
+-
+cmath
 -
 
